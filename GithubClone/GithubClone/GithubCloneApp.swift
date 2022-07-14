@@ -10,11 +10,12 @@ import SwiftUI
 @main
 struct GithubCloneApp: App {
     let persistenceController = PersistenceController.shared
-
+    @ObservedObject var user = AppUser()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            BaseView()
+                .environmentObject(user)
         }
     }
 }
