@@ -17,17 +17,16 @@ final class AuthorizationProvider: NSObject, ASWebAuthenticationPresentationCont
     }
     
     @MainActor
-    @discardableResult
-    func start() async throws -> Bool {
+    func start() async throws {
         return try await withCheckedThrowingContinuation { continuation in
             start {
-                continuation.resume(returning: $0)
+                continuation.resume()
             }
         }
     }
 
     
-    private func start(callback: ((Bool) -> Void)?) {
+    private func start(callback: (() -> Void)?) {
         let queryItems = [
           URLQueryItem(name: "client_id", value: "Iv1.42bda26d6fd553b9")
         ]
@@ -48,9 +47,7 @@ final class AuthorizationProvider: NSObject, ASWebAuthenticationPresentationCont
             
             Task {
                 let code = "\(url)".components(separatedBy: "code=").last ?? ""
-                
-                print(code)
-                
+                                
                 let queryItems = [
                   URLQueryItem(name: "client_id", value: "Iv1.42bda26d6fd553b9"),
                   URLQueryItem(name: "client_secret", value: "e2a2d54674141936d9616fea5101dc8287083517"),
@@ -75,12 +72,12 @@ final class AuthorizationProvider: NSObject, ASWebAuthenticationPresentationCont
                 
                 print("access token \(token)")
                 guard !token.isEmpty else {
-                    callback?(false)
+                    callback?()
                     return
                 }
                 
-                UserDefaults.standard.set(token, forKey: StorageKeys.token.rawValue)
-                callback?(true)
+                ProtectedStorageService.shared.save(token, forKey: StorageKeys.token.rawValue)
+                callback?()
             }
         }
         

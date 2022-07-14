@@ -27,11 +27,9 @@ final class AppUser: ObservableObject {
     }
     
     func setupUserState() {
-        let token = UserDefaults.standard.string(forKey: StorageKeys.token.rawValue) ?? ""
+        let token: String = ProtectedStorageService.shared.getValue(forKey: StorageKeys.token.rawValue) ?? ""
         userState = token.isEmpty ?
             .login :
             .authorized
-        
-      
     }
 }

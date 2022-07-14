@@ -9,7 +9,6 @@ import SwiftUI
 import AuthenticationServices
 
 struct Authorization: View {
-    @State var showWebView = false
     @StateObject var viewModel = AuthorizationViewModel()
     @EnvironmentObject var appUser: AppUser
     
