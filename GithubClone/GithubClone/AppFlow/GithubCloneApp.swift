@@ -9,9 +9,7 @@ import SwiftUI
 
 @main
 struct GithubCloneApp: App {
-    let persistenceController = PersistenceController.shared
     @ObservedObject var user = AppUser()
-    @ObservedObject var storage = StorageService()
     
     init() {
         registerDependencies()
@@ -21,7 +19,6 @@ struct GithubCloneApp: App {
         WindowGroup {
             BaseView()
                 .environmentObject(user)
-                .environment(\.managedObjectContext, storage.container.viewContext)
         }
     }
     

@@ -8,8 +8,20 @@
 import SwiftUI
 
 struct History: View {
+    @StateObject var viewModel = HistoryViewModel()
+    
     var body: some View {
-        Text("History")
+        NavigationView {
+            List {
+                ForEach(viewModel.repositories) {
+                    RepositoryView(repository: $0)
+                }
+            }
+            .navigationTitle("History")
+        }
+        .onAppear {
+            viewModel.onAppear()
+        }
     }
 }
 

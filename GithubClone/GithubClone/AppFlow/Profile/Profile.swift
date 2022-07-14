@@ -11,11 +11,14 @@ struct Profile: View {
     @EnvironmentObject var user: AppUser
     
     var body: some View {
-        List {
-            Button("Log Out") {
-                user.userState = .login
-                UserDefaults.standard.removeObject(forKey: StorageKeys.token.rawValue)
+        NavigationView {
+            List {
+                Button("Log Out") {
+                    user.userState = .login
+                    ProtectedStorageService.shared.removeValueForKey(StorageKeys.token.rawValue)
+                }
             }
+            .navigationTitle("Profile")
         }
     }
 }

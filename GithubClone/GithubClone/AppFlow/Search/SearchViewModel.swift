@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CoreData
 
 final class SearchViewModel: ObservableObject {
     enum Event {
@@ -23,6 +24,7 @@ final class SearchViewModel: ObservableObject {
     @Published var query = ""
     @Published var showWebView = false
     @Published var selectedRepository = Repository.mock
+    @Published var viewedRepositories: [Repository] = []
     
     private var store = Set<AnyCancellable>()
     private let input: PassthroughSubject = PassthroughSubject<Event, Never>()
@@ -66,13 +68,28 @@ final class SearchViewModel: ObservableObject {
     
     @MainActor
     private func searchRepositories() async {
-        guard !query.isEmpty else { return }
+        guard !query.isEmpty else {
+            repositories = []
+            return
+        }
         repositories = await searchService.searchRepositories(query: query)
+        viewedRepositories = StorageService.shared.getRepositories()
     }
     
     private func onCellTap(repository: Repository) {
         selectedRepository = repository
         showWebView.toggle()
+        save(repository: repository)
+        viewedRepositories.append(repository)
+    }
+    
+    private func save(repository: Repository) {
+        let repositoryEntity = RepositoryEntity(context: StorageService.shared.context)
+        repositoryEntity.id = Int64(repository.id)
+        repositoryEntity.name = repository.name
+        repositoryEntity.url = repository.url
+        repositoryEntity.stars = Int64(repository.stars)
+        StorageService.shared.save()
     }
     
     private func onSearchChange() {

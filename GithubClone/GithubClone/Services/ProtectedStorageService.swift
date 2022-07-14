@@ -20,4 +20,8 @@ final class ProtectedStorageService {
     func getValue<T>(forKey key: String) -> T? {
         UserDefaults.standard.value(forKey: key) as? T
     }
+    
+    func removeValueForKey(_ key: String) {
+        UserDefaults.standard.removeObject(forKey: key)
+    }
 }
