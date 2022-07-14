@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Repository: Codable, Identifiable {
+struct Repository: Codable, Identifiable, Hashable {
     var name: String
     var stars: Int
     var id: Int

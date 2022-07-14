@@ -17,7 +17,11 @@ struct Authorization: View {
             Button {
                 viewModel.start()
             } label: {
-                Text("Auth")
+                Text("Login with GitHub")
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(.blue)
+                    .cornerRadius(10)
             }
         }
         .onChange(of: viewModel.authorized) { authorized in
